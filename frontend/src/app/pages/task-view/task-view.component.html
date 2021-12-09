@@ -1,32 +1,28 @@
-<div class="centetred-content">
+<div class="centered-content">
     <div class="task-manager-container">
         <div class="sidebar has-background-white">
             <h1 class="title has-text-primary">
                 Lists
             </h1>
             <div class="list-menu">
-                <a class="list-menu-item">
-                    <p>Monday</p>
-                </a>
-                <a class="list-menu-item">
-                    <p>Tuesday</p>
-                </a>
-                <a class="list-menu-item">
-                    <p>Wednesday</p>
+                <a class="list-menu-item" *ngFor="let list of lists" [routerLink]="['/lists', list._id]" routerLinkActive="is-active">
+                    <p>{{ list.title}}</p>
                 </a>
             </div>
-            <button class="button is-primary has-text-white">New List</button>
+            <button class="button is-primary has-text-white" routerLink='/new-list'>+ New List</button>
         </div>
         <div class="task-list-container has-background-light">
             <h1 class="title has-text-primary">
                 Tasks
             </h1>
             <!-- Task Elements -->
-            <div class="task">
-                <p>Make Breakfast</p>
+            <div class="task" *ngFor="let task of tasks" (click)="onTaskClick(task)" [ngClass]="{'completed': task.completed}">
+                <p>{{ task.title }}</p>
             </div>
-            <div class="task">
-                <p>Clean Kitchen</p>
+            <div class="field is-grouped is-grouped-right">
+                <button class="button circle-add-button is-primary is-large has-text-white" routerLink='./new-task'>
+                    <h1>+</h1>
+                </button>
             </div>
         </div>
     </div>
