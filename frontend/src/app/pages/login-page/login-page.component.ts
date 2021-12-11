@@ -1,4 +1,7 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -7,13 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor() { }
+  faLock = faLock;
+  faUser = faUser;
+
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
-  onLoginButtonClicked(user: string, password: string){
-
+  onLoginButtonClicked(username: string, password: string) {
+    this.authService.login(username, password).subscribe((res: HttpResponse<any>) => {
+      console.log(res);
+    })
   }
 
 }

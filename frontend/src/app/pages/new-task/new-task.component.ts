@@ -30,4 +30,8 @@ export class NewTaskComponent implements OnInit {
     });
   }
 
+  cancelBack(){
+    this.router.navigate(['/lists'], { relativeTo: this.route });
+  }
+
 }

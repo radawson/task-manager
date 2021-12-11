@@ -14,6 +14,7 @@ export class TaskViewComponent implements OnInit {
 
   lists!: List[];
   tasks!: Task[];
+  taskView: boolean = false;
 
   constructor(private taskService: TaskService, private route: ActivatedRoute) { }
 
@@ -28,10 +29,10 @@ export class TaskViewComponent implements OnInit {
         if (params['listId']) {
           this.taskService.getTasks(params['listId']).subscribe((tasks: any) => {
             this.tasks = tasks;
+            this.taskView = true;
           })
         }
-      }
-    )
+      })
   }
 
   onTaskClick(task: Task) {

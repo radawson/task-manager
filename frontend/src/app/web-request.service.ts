@@ -8,7 +8,7 @@ export class WebRequestService {
 
   readonly ROOT_URL;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.ROOT_URL = 'http://localhost:3000';
   }
 
@@ -26,5 +26,14 @@ export class WebRequestService {
 
   delete(uri: string) {
     return this.http.delete(`${this.ROOT_URL}/${uri}`);
+  }
+
+  login(username: string, password: string) {
+    return this.http.post(`${this.ROOT_URL}/users/login`, {
+      username,
+      password
+    }, {
+      observe: 'response'
+    });
   }
 }

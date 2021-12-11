@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from 'src/app/task.service';
 import { List } from 'src/app/models/list.model';
 
@@ -10,7 +10,7 @@ import { List } from 'src/app/models/list.model';
 })
 export class NewListComponent implements OnInit {
 
-  constructor(private taskService: TaskService, private router: Router) { }
+  constructor(private taskService: TaskService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
   }
@@ -23,5 +23,8 @@ export class NewListComponent implements OnInit {
     });
   }
 
+  cancelBack(){
+    this.router.navigate(['/lists']);
+  }
 
 }
