@@ -7,6 +7,14 @@ const ListSchema = new mongoose.Schema({
         minlength: 1,
         trim: true
     },
+    _userIds: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+    public: {
+        type: Boolean,
+        default: true
+    }
 
 })
 

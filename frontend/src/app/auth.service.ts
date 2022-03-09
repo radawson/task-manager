@@ -24,6 +24,7 @@ export class AuthService {
           console.log('tokens missing from header');
         } else {
           this.setSession(res.body._id, accessToken, refreshToken);
+          console.log('Logged In');
         }
       })
     )

@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class WebReqInterceptorService implements HttpInterceptor {
+export class WebReqInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) { }
 

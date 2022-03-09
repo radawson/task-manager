@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -28,7 +28,12 @@ const UserSchema = new mongoose.Schema({
             type: Number,
             required: true
         }
-    }]
+    }],
+    email: {
+        type: String,
+        required: false,
+        minlength: 5
+    }
 });
 
 // Instance Methods
@@ -50,7 +55,7 @@ UserSchema.methods.generateAccessAuthToken = function () {
                 resolve(token);
             } else {
                 // there is an error
-                reject('token failed to generate');
+                reject('Access token failed to generate');
             }
         })
     })
@@ -63,11 +68,10 @@ UserSchema.methods.generateRefreshAuthToken = function () {
             if (!err) {
                 // no error
                 let token = buf.toString('hex');
-
                 return resolve(token);
             } else {
                 // there is an error
-                reject();
+                reject('Refresh token failed to generate');
             }
         })
     })
@@ -82,18 +86,12 @@ UserSchema.methods.createSession = function () {
         // saved to database successfully
         // now return the refresh token
         return refreshToken;
-    }).catch((e) => {
-        return Promise.reject('Failed to save session to database.\n' + e);
+    }).catch((err) => {
+        return Promise.reject('Failed to save session to database.\n' + err);
     })
 }
 
-
-
 /* MODEL METHODS (static methods) */
-
-UserSchema.statics.getJWTSecret = () => {
-    return jwtSecret;
-}
 
 UserSchema.statics.findByIdAndToken = function (_id, token) {
     // finds user by id and token
@@ -107,6 +105,9 @@ UserSchema.statics.findByIdAndToken = function (_id, token) {
     });
 }
 
+UserSchema.statics.getJWTSecret = () => {
+    return jwtSecret;
+}
 
 UserSchema.statics.findByCredentials = function (username, password) {
     let User = this;
@@ -119,7 +120,7 @@ UserSchema.statics.findByCredentials = function (username, password) {
                     resolve(user);
                 }
                 else {
-                    reject();
+                    reject(err);
                 }
             })
         })
@@ -129,7 +130,7 @@ UserSchema.statics.findByCredentials = function (username, password) {
 UserSchema.statics.hasRefreshTokenExpired = (expireTime) => {
     let secondsSinceEpoch = Date.now() / 1000;
     if (expireTime > secondsSinceEpoch) {
-        // hasn't expired
+        // is valid
         return false;
     } else {
         // has expired
@@ -137,15 +138,14 @@ UserSchema.statics.hasRefreshTokenExpired = (expireTime) => {
     }
 }
 
-
 /* MIDDLEWARE */
-// Before a user document is saved, this code runs
+// This runs before anything is saved
 UserSchema.pre('save', function (next) {
     let user = this;
     let costFactor = 10;
 
+    // if the password field has been edited/changed 
     if (user.isModified('password')) {
-        // if the password field has been edited/changed then run this code.
 
         // Generate salt and hash password
         bcrypt.genSalt(costFactor, (err, salt) => {
@@ -159,7 +159,6 @@ UserSchema.pre('save', function (next) {
     }
 });
 
-
 /* HELPER METHODS */
 let saveSessionToDatabase = (user, refreshToken) => {
     // Save session to database
@@ -171,8 +170,8 @@ let saveSessionToDatabase = (user, refreshToken) => {
         user.save().then(() => {
             // saved session successfully
             return resolve(refreshToken);
-        }).catch((e) => {
-            reject(e);
+        }).catch((err) => {
+            reject(err);
         });
     })
 }

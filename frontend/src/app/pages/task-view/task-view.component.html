@@ -1,30 +1,39 @@
 <div class="centered-content">
     <div class="task-manager-container">
         <div class="sidebar has-background-white">
-            <h1 class="title has-text-primary">
+            <a class="title has-text-primary" routerLink='/lists'>
                 Lists
-            </h1>
+            </a>
             <div class="list-menu">
-                <a class="list-menu-item" *ngFor="let list of lists" [routerLink]="['/lists', list._id]" routerLinkActive="is-active">
+                <a class="list-menu-item" *ngFor="let list of lists" [routerLink]="['/lists', list._id]"
+                    routerLinkActive="is-active">
                     <p>{{ list.title}}</p>
                 </a>
             </div>
             <button class="button is-primary has-text-white" routerLink='/new-list'>+ New List</button>
         </div>
-        <div class="task-list-container has-background-light" >
+        <div class="task-list-container has-background-light" *ngIf="tasks">
+
             <div *ngIf="taskView">
-            <h1 class="title has-text-primary">
-                Tasks
-            </h1>
-            <!-- Task Elements -->
-            <div class="task" *ngFor="let task of tasks" (click)="onTaskClick(task)" [ngClass]="{'completed': task.completed}">
-                <p>{{ task.title }}</p>
-            </div>
-            <div class="field is-grouped is-grouped-right">
-                <button class="button circle-add-button is-primary is-large has-text-white" routerLink='./new-task'>
-                    <h1>+</h1>
-                </button>
-            </div>
+                <h1 class="title has-text-primary">
+                    Tasks
+                </h1>
+
+                <h3 class="empty-state-text" *ngIf="tasks.length === 0"> No tasks found for this list</h3>
+
+                <!-- Task Elements -->
+                <div class="task" *ngFor="let task of tasks" (click)="onTaskClick(task)"
+                    [ngClass]="{'completed': task.completed}">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                        <p>{{ task.title }}</p>
+                    </label>
+                </div>
+                <div class="field is-grouped is-grouped-right">
+                    <button class="button circle-add-button is-primary is-large has-text-white" routerLink='./new-task'>
+                        <h1>+</h1>
+                    </button>
+                </div>
             </div>
 
             <div *ngIf=(!taskView)>

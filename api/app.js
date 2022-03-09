@@ -2,11 +2,12 @@ const express = require('express');
 app = express();
 
 const { mongoose } = require('./db/mongoose');
+const { jwt } = require('jsonwebtoken');
 
 // load mongoose models
 const { List, Task, User } = require('./db/models');
 
-// Middleware
+/* Middleware */
 //Used to parse JSON body
 app.use(express.json());
 
@@ -15,9 +16,30 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
     next();
-    res.header('Access-Control-Expose-Headers', 'x-access-token, x-refresh-token');
 });
+
+// Authentication Function
+let authenticate = (req, res, next) => {
+    let token = req.header('x-access-token');
+
+    if (!token) {
+        res.status(401).send({ auth: false })
+    }
+    else {
+        // verify JWT token
+        jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
+            if (err) {
+                // Do Not Authenticate
+                return res.status(401).send('err');
+            } else {
+                req.user_id = decoded._id;
+                next();
+            }
+        });
+    }
+}
 
 // Used to verify a refresh token (session verification)
 let verifySession = (req, res, next) => {
@@ -59,8 +81,8 @@ let verifySession = (req, res, next) => {
                 'error': 'Refresh token is expired or session is invalid '
             });
         }
-    }).catch((e) => {
-        res.status(401).send(e);
+    }).catch((err) => {
+        res.status(401).send(err);
     });
 
 };
@@ -76,7 +98,7 @@ let verifySession = (req, res, next) => {
  * POST /lists
  * Purpose: create a new list and treturn that list with id
  */
-app.post('/lists', (req, res) => {
+app.post('/lists', authenticate, (req, res) => {
     // create a new list and return that list with db id
     //return list information in JSON body
     let title = req.body.title;
@@ -94,9 +116,11 @@ app.post('/lists', (req, res) => {
  * GET /lists
  * Purpose: return all lists
  */
-app.get('/lists', (req, res) => {
+app.get('/lists', authenticate, (req, res) => {
     // Return an array of all lists in db
-    List.find({}).then((lists) => {
+    List.find({
+        _userId: req.user_id
+    }).then((lists) => {
         res.send(lists);
     })
 })
@@ -126,6 +150,8 @@ app.delete('/lists/:listId', (req, res) => {
         _id: req.params.listId
     }).then((removedListDoc) => {
         res.send(removedListDoc);
+        // Delete all tasks with this listId
+        deleteTasksFromList(removedListDoc._listId);
     });
 })
 
@@ -258,8 +284,8 @@ app.post('/users/login', (req, res) => {
                 .header('x-access-token', authTokens.accessToken)
                 .send(user);
         })
-    }).catch((e) => {
-        res.status(400).send(e);
+    }).catch((err) => {
+        res.status(400).send(err);
     });
 })
 
@@ -275,6 +301,21 @@ app.get('/users/me/access-token', verifySession, (req, res) => {
         res.status(400).send(e);
     });
 
+})
+
+/* Helper Methods */
+// Delete all tasks from a specified list]
+let deleteTasksFromList = (listId) => {
+    Task.deleteMany({
+        listId
+    }).then(() => {
+        console.log("Tasks from " + listId + " were deleted.");
+    })
+}
+
+// TODO: Remove this before production
+app.get('/test', (req, res) => {
+    return res.status(200).send(User.getJWTSecret());
 })
 
 app.listen(3000, () => {

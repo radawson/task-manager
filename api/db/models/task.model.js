@@ -14,6 +14,10 @@ const TaskSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+    public: {
+        type: Boolean,
+        default: true
     }
 })
 
