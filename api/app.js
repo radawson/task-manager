@@ -29,6 +29,7 @@ let authenticate = (req, res, next) => {
     }
     else {
         // verify JWT token
+        console.log(User.getJWTSecret());
         jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
             if (err) {
                 // Do Not Authenticate
@@ -116,7 +117,7 @@ app.post('/lists', authenticate, (req, res) => {
  * GET /lists
  * Purpose: return all lists
  */
-app.get('/lists', authenticate, (req, res) => {
+app.get('/lists', (req, res) => {
     // Return an array of all lists in db
     List.find({
         _userId: req.user_id
@@ -149,9 +150,10 @@ app.delete('/lists/:listId', (req, res) => {
     List.findOneAndRemove({
         _id: req.params.listId
     }).then((removedListDoc) => {
-        res.send(removedListDoc);
         // Delete all tasks with this listId
-        deleteTasksFromList(removedListDoc._listId);
+        deleteTasksFromList(removedListDoc._id);
+        res.send(removedListDoc);
+
     });
 })
 
