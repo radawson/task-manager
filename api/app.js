@@ -29,7 +29,6 @@ let authenticate = (req, res, next) => {
     }
     else {
         // verify JWT token
-        console.log(User.getJWTSecret());
         jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
             if (err) {
                 // Do Not Authenticate
@@ -97,9 +96,9 @@ let verifySession = (req, res, next) => {
 
 /**
  * POST /lists
- * Purpose: create a new list and treturn that list with id
+ * Purpose: create a new list and return that list with id
  */
-app.post('/lists', authenticate, (req, res) => {
+app.post('/lists', (req, res) => {
     // create a new list and return that list with db id
     //return list information in JSON body
     let title = req.body.title;
@@ -120,7 +119,9 @@ app.post('/lists', authenticate, (req, res) => {
 app.get('/lists', (req, res) => {
     // Return an array of all lists in db
     List.find({
-        _userId: req.user_id
+        $or: [
+            { public: true },
+            { _userIds: req.user_id }]
     }).then((lists) => {
         res.send(lists);
     })
