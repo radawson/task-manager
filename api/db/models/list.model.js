@@ -8,12 +8,16 @@ const ListSchema = new mongoose.Schema({
         trim: true
     },
     _userIds: {
-        type: mongoose.Types.ObjectId,
-        required: true
+        type: [mongoose.Types.ObjectId],
+        required: false
     },
     public: {
         type: Boolean,
         default: true
+    },
+    description: {
+        type: String,
+        required: false
     }
 
 })
