@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
-const jwtSecret = '7yhgdyuolkas98y3798dhi783h879908hj';
+const { jwtSecret } = require(appRoot + '/config');
 
 const UserSchema = new mongoose.Schema({
     username: {

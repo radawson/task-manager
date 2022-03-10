@@ -1,8 +1,12 @@
 const express = require('express');
 app = express();
 
-const { mongoose } = require('./db/mongoose');
-const { jwt } = require('jsonwebtoken');
+// make appRoot available globally for configuration
+var path = require('path');
+global.appRoot = path.resolve(__dirname);
+
+const jwt = require('jsonwebtoken');
+const { port } = require('./config');
 
 // load mongoose models
 const { List, Task, User } = require('./db/models');
@@ -29,12 +33,14 @@ let authenticate = (req, res, next) => {
     }
     else {
         // verify JWT token
-        jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
+        console.log(User.getJWTSecret());
+        jwt.verify(token, User.getJWTSecret(), function (err, decoded) {
             if (err) {
                 // Do Not Authenticate
-                return res.status(401).send('err');
+                return res.status(401).send(err);
             } else {
-                req.user_id = decoded._id;
+                req.user_id = decoded.id;
+                console.log("success: " + req.user_id)
                 next();
             }
         });
@@ -98,13 +104,14 @@ let verifySession = (req, res, next) => {
  * POST /lists
  * Purpose: create a new list and return that list with id
  */
-app.post('/lists', (req, res) => {
+app.post('/lists', authenticate, (req, res) => {
     // create a new list and return that list with db id
-    //return list information in JSON body
+    // return list information in JSON body
     let title = req.body.title;
 
     let newList = new List({
-        title
+        title,
+        _userId: req.user_id
     });
     newList.save().then((listDoc) => {
         res.send(listDoc);
@@ -116,7 +123,7 @@ app.post('/lists', (req, res) => {
  * GET /lists
  * Purpose: return all lists
  */
-app.get('/lists', (req, res) => {
+app.get('/lists', authenticate, (req, res) => {
     // Return an array of all lists in db
     List.find({
         $or: [
@@ -308,11 +315,11 @@ app.get('/users/me/access-token', verifySession, (req, res) => {
 
 /* Helper Methods */
 // Delete all tasks from a specified list]
-let deleteTasksFromList = (listId) => {
+let deleteTasksFromList = (_listId) => {
     Task.deleteMany({
-        listId
+        _listId
     }).then(() => {
-        console.log("Tasks from " + listId + " were deleted.");
+        console.log("Tasks from " + _listId + " were deleted.");
     })
 }
 
@@ -321,6 +328,6 @@ app.get('/test', (req, res) => {
     return res.status(200).send(User.getJWTSecret());
 })
 
-app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 })
