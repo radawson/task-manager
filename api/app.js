@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const { port } = require('./config');
 
 // load mongoose models
+const { mongoose } = require('./db/mongoose');
 const { List, Task, User } = require('./db/models');
 
 /* Middleware */
@@ -33,8 +34,7 @@ let authenticate = (req, res, next) => {
     }
     else {
         // verify JWT token
-        console.log(User.getJWTSecret());
-        jwt.verify(token, User.getJWTSecret(), function (err, decoded) {
+        jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
             if (err) {
                 // Do Not Authenticate
                 return res.status(401).send(err);
@@ -322,11 +322,6 @@ let deleteTasksFromList = (_listId) => {
         console.log("Tasks from " + _listId + " were deleted.");
     })
 }
-
-// TODO: Remove this before production
-app.get('/test', (req, res) => {
-    return res.status(200).send(User.getJWTSecret());
-})
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
