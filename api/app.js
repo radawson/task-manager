@@ -39,8 +39,7 @@ let authenticate = (req, res, next) => {
                 // Do Not Authenticate
                 return res.status(401).send(err);
             } else {
-                req.user_id = decoded.id;
-                console.log("success: " + req.user_id)
+                req.user_id = decoded._id;
                 next();
             }
         });
@@ -108,11 +107,13 @@ app.post('/lists', authenticate, (req, res) => {
     // create a new list and return that list with db id
     // return list information in JSON body
     let title = req.body.title;
+    let public = req.body.public;
 
     let newList = new List({
         title,
-        _userId: req.user_id
+        public,
     });
+    newList._userIds.push(req.user_id);
     newList.save().then((listDoc) => {
         res.send(listDoc);
     })
