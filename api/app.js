@@ -107,11 +107,15 @@ app.post('/lists', authenticate, (req, res) => {
     // create a new list and return that list with db id
     // return list information in JSON body
     let title = req.body.title;
-    let public = req.body.public;
+    let description = req.body.description;
+    let public_view = req.body.public_view;
+    let public_edit = req.body.public_edit;
 
     let newList = new List({
-        title,
-        public,
+        title: title,
+        description: description,
+        public_view: public_view,
+        public_edit: public_edit
     });
     newList._userIds.push(req.user_id);
     newList.save().then((listDoc) => {
@@ -173,6 +177,8 @@ app.delete('/lists/:listId', (req, res) => {
  * Purpose: Add a task to a specified list
  */
 app.post('/lists/:listId/tasks', (req, res) => {
+
+
     let newTask = new Task({
         title: req.body.title,
         _listId: req.params.listId
@@ -186,7 +192,7 @@ app.post('/lists/:listId/tasks', (req, res) => {
  * GET /lists/:listId/tasks
  * Purpose: Get all tasks from a given list 
  */
-app.get('/lists/:listId/tasks', (req, res) => {
+app.get('/lists/:listId/tasks', authenticate, (req, res) => {
     Task.find({
         _listId: req.params.listId
     }).then((tasks) => {

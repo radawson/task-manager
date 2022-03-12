@@ -11,9 +11,13 @@ const ListSchema = new mongoose.Schema({
         type: [mongoose.Types.ObjectId],
         required: false
     },
-    public: {
+    public_view: {
         type: Boolean,
         default: true
+    },
+    public_edit: {
+        type: Boolean,
+        default: false
     },
     description: {
         type: String,
