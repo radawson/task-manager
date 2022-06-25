@@ -15,6 +15,14 @@ const TaskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    day: {
+        type: Number,
+        default: false
+    },
+    date: {
+        type: Date,
+        required: false
+    },
     public: {
         type: Boolean,
         default: true

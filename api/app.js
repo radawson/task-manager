@@ -132,7 +132,7 @@ app.get('/lists', authenticate, (req, res) => {
     // Return an array of all lists in db
     List.find({
         $or: [
-            { public: true },
+            { public_view: true },
             { _userIds: req.user_id }]
     }).then((lists) => {
         res.send(lists);
@@ -177,14 +177,31 @@ app.delete('/lists/:listId', (req, res) => {
  * Purpose: Add a task to a specified list
  */
 app.post('/lists/:listId/tasks', (req, res) => {
-
-
-    let newTask = new Task({
-        title: req.body.title,
-        _listId: req.params.listId
-    });
-    newTask.save().then((newTaskDoc) => {
-        res.send(newTaskDoc);
+    List.findOne({
+        $or: [
+            {
+                _id: req.params.listId,
+                _userId: req.user_id
+            },
+            { public_edit: true }]
+    }).then((list) => {
+        if (list) {
+            return true;
+        }
+        //else
+        return false;
+    }).then((canCreateTask) => {
+        if (canCreateTask) {
+            let newTask = new Task({
+                title: req.body.title,
+                _listId: req.params.listId
+            });
+            newTask.save().then((newTaskDoc) => {
+                res.send(newTaskDoc);
+            })
+        } else {
+            res.sendStatus(404);
+        }
     })
 });
 
@@ -220,15 +237,34 @@ app.get('/lists/:listId/tasks/:taskId', (req, res) => {
 app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
     // update list based on list id
     // new values based on JSON body
-    Task.findOneAndUpdate({
-        _id: req.params.taskId,
-        _listId: req.params.listId
-    }, {
-        $set: req.body
-    }).then(() => {
-        res.send({ message: 'Updated Successfully' });
-    });
-
+    // TODO: Refactor the list check into a function
+    List.findOne({
+        $or: [
+            {
+                _id: req.params.listId,
+                _userId: req.user_id
+            },
+            { public_edit: true }]
+    }).then((list) => {
+        if (list) {
+            return true;
+        }
+        //else
+        return false;
+    }).then((canCreateTask) => {
+        if (canCreateTask) {
+            Task.findOneAndUpdate({
+                _id: req.params.taskId,
+                _listId: req.params.listId
+            }, {
+                $set: req.body
+            }).then(() => {
+                res.send({ message: 'Updated Successfully' });
+            })
+        } else {
+            res.sendStatus(404);
+        }
+    })
 })
 
 /**

@@ -13,7 +13,7 @@ const ListSchema = new mongoose.Schema({
     },
     public_view: {
         type: Boolean,
-        default: true
+        default: false
     },
     public_edit: {
         type: Boolean,

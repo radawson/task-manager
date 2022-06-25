@@ -5,10 +5,10 @@
 
 $turquoise: #44ddd0;
 $green: #27d7a1;
-$light-green: #45f69e; 
-$dark-green: rgb(0, 100, 80);
+$light-green: #45f69e;
+$dark-green: #4E6135;
 
-$light: #f8f8f8;
+$light: #C5AD3D;
 
 
 // Update Bulma's global variables
@@ -31,7 +31,8 @@ html {
     background: linear-gradient(to right top, $turquoise, $green);
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
@@ -66,5 +67,5 @@ html, body {
 
     width: 350px;
     max-width: 350px;
-    
+
 }
