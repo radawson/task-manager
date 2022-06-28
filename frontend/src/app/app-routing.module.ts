@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AddUserComponent } from './pages/add-user/add-user.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { NewListComponent } from './pages/new-list/new-list.component';
@@ -9,12 +10,13 @@ import { TaskViewComponent } from './pages/task-view/task-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginPageComponent},
+  { path: 'add-user', component: AddUserComponent },
+  { path: 'login', component: LoginPageComponent },
   { path: 'new-list', component: NewListComponent },
-  { path: 'lists', component: TaskViewComponent},
-  { path: 'lists/:listId', component: TaskViewComponent},
+  { path: 'lists', component: TaskViewComponent },
+  { path: 'lists/:listId', component: TaskViewComponent },
   { path: 'lists/:listId/new-task', component: NewTaskComponent },
-  { path: 'shopping', component: ShoppingComponent},
+  { path: 'shopping', component: ShoppingComponent },
 ];
 
 @NgModule({

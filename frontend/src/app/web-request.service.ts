@@ -28,6 +28,16 @@ export class WebRequestService {
     return this.http.delete(`${this.ROOT_URL}/${uri}`);
   }
 
+  adduser(username: string, password: string, level: number) {
+    return this.http.post(`${this.ROOT_URL}/users`, {
+      username,
+      password,
+      level
+    }, {
+      observe: 'response'
+    });
+  }
+
   login(username: string, password: string) {
     return this.http.post(`${this.ROOT_URL}/users/login`, {
       username,

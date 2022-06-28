@@ -13,6 +13,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { HomeComponent } from './pages/home/home.component';
 import { WebReqInterceptor } from './web-req-interceptor.service';
+import { AddUserComponent } from './pages/add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { WebReqInterceptor } from './web-req-interceptor.service';
     LoginPageComponent,
     NavbarComponent,
     ShoppingComponent,
-    HomeComponent
+    HomeComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,

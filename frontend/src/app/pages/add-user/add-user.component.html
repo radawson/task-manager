@@ -1,0 +1,41 @@
+<div class="centered-content">
+    <div class="white-box">
+
+        <h1 class="title has-text-primary">Add User</h1>
+
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+                <input #nameInput class="input has-background-light" type="username" placeholder="username">
+                <span class="icon is-small is-left">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left">
+                <input #pwInput class="input has-background-light" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                    <fa-icon [icon]="faLock"></fa-icon>
+                </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+                <input #levelInput class="input has-background-light" type="username" placeholder="access level">
+                <span class="icon is-small is-left">
+                    <fa-icon [icon]="faShield"></fa-icon>
+                </span>
+            </p>
+        </div>
+        <div class="field" style="display: flex; justify-content: flex-end;">
+            <p class="control">
+                <button class="button is-success has-text-white"
+                    (click)="onCreateButtonClicked(nameInput.value, pwInput.value, levelInput.value)">
+                    Create
+                </button>
+            </p>
+        </div>
+
+        <br>
+    </div>
+</div>

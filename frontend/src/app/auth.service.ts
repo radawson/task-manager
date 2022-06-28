@@ -11,6 +11,24 @@ export class AuthService {
 
   constructor(private webService: WebRequestService, private router: Router, private http: HttpClient) { }
 
+  adduser(username: string, password: string, level: number) {
+    return this.webService.adduser(username, password, level).pipe(
+      shareReplay(),
+      tap((res: HttpResponse<any>) => {
+        //get auth token from header
+        let accessToken = res.headers.get('x-access-token');
+        console.log(accessToken);
+        let refreshToken = res.headers.get('x-refresh-token');
+        console.log(refreshToken);
+        if (accessToken == null || refreshToken == null) {
+          console.log('tokens missing from header');
+        } else {
+          this.setSession(res.body._id, accessToken, refreshToken);
+        }
+      })
+    )
+  }
+
   login(username: string, password: string) {
     return this.webService.login(username, password).pipe(
       shareReplay(),
