@@ -35,13 +35,14 @@
                     </button>
                 </div>
             </div>
-
-            <div *ngIf=(!taskView)>
-                <h1 class="empty-state-text">
-                    Select a list to see tasks
-                </h1>
-            </div>
-
         </div>
+
+        <div class="task-list-container has-background-light" *ngIf=(!taskView)>
+            <h1 class="empty-state-text">
+                Select a list to see tasks
+            </h1>
+        </div>
+
+
     </div>
 </div>
