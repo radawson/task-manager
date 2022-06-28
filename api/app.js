@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token");
     res.header("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
     next();
 });
@@ -234,7 +234,7 @@ app.get('/lists/:listId/tasks/:taskId', (req, res) => {
  * PATCH lists/:listId/tasks/:taskId
  * Purpose: update the specified task
  */
-app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
+app.patch('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
     // update list based on list id
     // new values based on JSON body
     // TODO: Refactor the list check into a function
@@ -251,8 +251,8 @@ app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
         }
         //else
         return false;
-    }).then((canCreateTask) => {
-        if (canCreateTask) {
+    }).then((canUpdateTask) => {
+        if (canUpdateTask) {
             Task.findOneAndUpdate({
                 _id: req.params.taskId,
                 _listId: req.params.listId
@@ -271,12 +271,31 @@ app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
  * DELETE /lists/:id/tasks/:taskId
  * Purpose: Deletes the specified task
  */
-app.delete('/lists/:listId/tasks/:taskId', (req, res) => {
-    // delete the specified list
-    Task.findOneAndRemove({
-        _id: req.params.taskId
-    }).then((removedListDoc) => {
-        res.send(removedListDoc);
+app.delete('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
+    List.findOne({
+        $or: [
+            {
+                _id: req.params.listId,
+                _userId: req.user_id
+            },
+            { public_edit: true }]
+    }).then((list) => {
+        if (list) {
+            return true;
+        }
+        //else
+        return false;
+    }).then((canDeleteTask) => {
+        if (canDeleteTask) {
+            // delete the specified list
+            Task.findOneAndRemove({
+                _id: req.params.taskId
+            }).then((removedListDoc) => {
+                res.send(removedListDoc);
+            });
+        } else {
+            res.sendStatus(404);
+        }
     });
 })
 
