@@ -24,7 +24,6 @@ export class AuthService {
           console.log('tokens missing from header');
         } else {
           this.setSession(res.body._id, accessToken, refreshToken);
-          console.log('Logged In');
         }
       })
     )
@@ -37,21 +36,46 @@ export class AuthService {
   }
 
   getAccessToken() {
-    return localStorage.getItem('x-access-token');
+    return this.nullFilter(localStorage.getItem('x-access-token'));
   }
 
   setAccessToken(accessToken: string) {
     return localStorage.setItem('x-access-token', accessToken);
   }
 
-  getRefreshToken() {
-    return localStorage.getItem('refresh-token');
+  getNewAccessToken() {
+    return this.http.get(`${this.webService.ROOT_URL}/users/me/access-token`, {
+      headers: {
+        'x-refresh-token': this.getRefreshToken(),
+        '_id': this.getUserId()
+      },
+      observe: 'response'
+    }).pipe(
+      tap((res: HttpResponse<any>) => {
+        this.setAccessToken(this.nullFilter(res.headers.get('x-access-token')));
+      })
+    )
+  }
+
+  getRefreshToken(): string {
+    return this.nullFilter(localStorage.getItem('refresh-token'));
   }
 
   setRefreshToken(refreshToken: string) {
     return localStorage.setItem('refresh-token', refreshToken);
   }
 
+  getUserId() {
+    return this.nullFilter(localStorage.getItem('user-id'));
+  }
+
+  private nullFilter(rawInput: string | null): string {
+    if (rawInput !== null) {
+      return rawInput
+    } else {
+      return '0';
+    }
+  }
   private setSession(userId: string, accessToken: string, refreshToken: string) {
     localStorage.setItem('user-id', userId);
     localStorage.setItem('x-access-token', accessToken);

@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token, _id");
     res.header("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
     next();
 });
@@ -303,10 +303,10 @@ app.delete('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
 
 /**
  * POST /users
- * Purpose: Sign up
+ * Purpose: Add user
  */
 app.post('/users', (req, res) => {
-    // User sign up
+    // Add a new user
 
     let body = req.body;
     let newUser = new User(body);
@@ -315,14 +315,14 @@ app.post('/users', (req, res) => {
         return newUser.createSession();
     }).then((refreshToken) => {
         // Session created successfully - refreshToken returned.
-        // now we geneate an access auth token for the user
+        // generate an access auth token for the user
 
         return newUser.generateAccessAuthToken().then((accessToken) => {
-            // access auth token generated successfully, now we return an object containing the auth tokens
+            // access auth token generated successfully, return an object containing the auth tokens
             return { accessToken, refreshToken }
         });
     }).then((authTokens) => {
-        // Now we construct and send the response to the user with their auth tokens in the header and the user object in the body
+        // Now construct and send the response to the user with their auth tokens in the header and the user object in the body
         res
             .header('x-refresh-token', authTokens.refreshToken)
             .header('x-access-token', authTokens.accessToken)
