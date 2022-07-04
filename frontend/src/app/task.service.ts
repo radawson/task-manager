@@ -33,9 +33,9 @@ export class TaskService {
     return this.webReqService.get(`list/${listName}`);
   }
 
-  updateList(listId: string, list: List) {
+  updateList(list: List) {
     // Create a new list with title
-    return this.webReqService.patch(`lists/${listId}`, list);
+    return this.webReqService.patch(`lists/${list._id}`, list);
   }
 
   // Tasks

@@ -27,10 +27,14 @@ export class EditListComponent implements OnInit {
       })
   }
 
-  updateList(title: string, description: string) {
+  updateList(title: string, description: string, public_view: string, public_edit: string) {
     this.list.title = title;
     this.list.description = description;
-    this.taskService.updateList(this.listId, this.list).subscribe(() => {
+    this.list.public_edit = public_edit;
+    console.log(public_edit);
+    this.list.public_view = public_view;
+    console.log(public_view);
+    this.taskService.updateList(this.list).subscribe(() => {
       //return to lists/list._id
       this.router.navigate(['/lists', this.listId]);
     });
@@ -38,6 +42,10 @@ export class EditListComponent implements OnInit {
 
   cancelBack() {
     this.router.navigate(['/lists']);
+  }
+
+  stringToBoolean(string: string) {
+    switch (string.toLowerCase()) { case "false": case "no": case "0": case "": return false; default: return true; }
   }
 
 }

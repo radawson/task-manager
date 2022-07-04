@@ -4,5 +4,6 @@ export class Task {
     title: string = "";
     description: string = "";
     completed: boolean = false;
+    completed_date: Date = new Date();
     public: boolean = true;
 }

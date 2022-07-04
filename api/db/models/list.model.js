@@ -12,12 +12,12 @@ const ListSchema = new mongoose.Schema({
         required: false
     },
     public_view: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: 0
     },
     public_edit: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: 0
     },
     description: {
         type: String,

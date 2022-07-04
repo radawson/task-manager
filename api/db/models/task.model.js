@@ -18,6 +18,9 @@ const TaskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    completed_date: {
+        type: Date,
+    },
     day: {
         type: Number,
         default: false
