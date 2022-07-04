@@ -12,13 +12,14 @@
   display: flex;
   flex-direction: column;
 
-  width: 250px;
+  width: 25%;
   background: white;
 
-  padding: 42px;
+  padding: 2em;
 
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
+
 }
 
 .task-list-container {
@@ -26,18 +27,20 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 42px;
+  padding: 2em;
 
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 
-  .top-bar {
-    margin-bottom: 20px;
-    display: flex;
-    .title {
-      flex-grow: 1;
-      margin: 0;
-    }
+}
+
+.top-bar {
+  margin-bottom: 20px;
+  display: flex;
+
+  .title {
+    flex-grow: 1;
+    margin: 0;
   }
 }
 
@@ -69,13 +72,12 @@
   }
 }
 
-.task {
+.task-row {
   display: flex;
   background: white;
   padding: 15px 20px;
   border-radius: 5px;
   margin-top: 10px;
-
   align-items: center;
 
   &:not(.complete) {
@@ -102,14 +104,13 @@
   }
 
   .task-text {
-    display: flex;
     flex-grow: 1;
   }
 
   .task-buttons {
     transition: opacity 0.2s, transform 0.2s;
     opacity: 0;
-    transform: scale(0.85);
+    transform: scale(0.5);
   }
 }
 

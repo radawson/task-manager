@@ -1,5 +1,7 @@
 export class List {
     _id: string = "";
     title: string = "";
-    public: boolean = true;
+    description: string = "";
+    public_view: boolean = true;
+    public_edit: boolean = false;
 }

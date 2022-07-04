@@ -14,6 +14,8 @@ import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { HomeComponent } from './pages/home/home.component';
 import { WebReqInterceptor } from './web-req-interceptor.service';
 import { AddUserComponent } from './pages/add-user/add-user.component';
+import { EditListComponent } from './pages/edit-list/edit-list.component';
+import { EditTaskComponent } from './pages/edit-task/edit-task.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { AddUserComponent } from './pages/add-user/add-user.component';
     NavbarComponent,
     ShoppingComponent,
     HomeComponent,
-    AddUserComponent
+    AddUserComponent,
+    EditListComponent,
+    EditTaskComponent
   ],
   imports: [
     BrowserModule,

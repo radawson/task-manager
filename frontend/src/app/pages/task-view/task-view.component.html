@@ -1,9 +1,31 @@
 <div class="centered-content">
     <div class="task-manager-container">
         <div class="sidebar has-background-white">
-            <a class="title has-text-primary" routerLink='/lists'>
-                Lists
-            </a>
+            <div class="top-bar">
+                <a class="title has-text-primary" routerLink='/lists'>
+                    Lists
+                </a>
+                <div class="dropdown is-right is-hoverable">
+                    <div class="dropdown-trigger">
+                        <button class="button" aria-haspopup="true">
+                            <span class="icon ">
+                                <fa-icon [icon]="faCog" aria-hidden="true"></fa-icon>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                        <div class="dropdown-content">
+                            <a (click)="onEditListClick()" class="dropdown-item">
+                                Edit List
+                            </a>
+                            <a (click)="onDeleteListClick()" class="dropdown-item">
+                                Delete List
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <div class="list-menu">
                 <a class="list-menu-item" *ngFor="let list of lists" [routerLink]="['/lists', list._id]"
                     routerLinkActive="is-active">
@@ -15,34 +37,43 @@
         <div class="task-list-container has-background-light" *ngIf="tasks">
 
             <div *ngIf="taskView">
-                <h1 class="title has-text-primary">
-                    Tasks
-                </h1>
+                <div class="top-bar">
+                    <h1 class="title has-text-primary">
+                        Tasks
+                    </h1>
+                </div>
 
                 <h3 class="empty-state-text" *ngIf="tasks.length === 0"> No tasks found for this list</h3>
 
                 <!-- Task Elements -->
-                <div class="task" *ngFor="let task of tasks" (click)="onTaskClick(task)"
-                    [ngClass]="{'completed': task.completed}">
-                    <label class="checkbox">
-                        <input type="checkbox">
-                        <p>{{ task.title }}</p>
-                    </label>
+                <div class="task-row" *ngFor="let task of tasks" [ngClass]="{'completed': task.completed}">
+                    <div class="task-text" (click)="onTaskClick(task)">{{ task.title }}</div>
+                    <button class="task-buttons" (click)="onEditTaskClick(task)">
+                        <span class="icon ">
+                            <fa-icon [icon]="faEdit" aria-hidden="true"></fa-icon>
+                        </span>
+                    </button>
+                    <button class="is-danger task-buttons" (click)="onDeleteTaskClick(task)">
+                        <span class="icon ">
+                            <fa-icon [icon]="faTrash" aria-hidden="true"></fa-icon>
+                        </span>
+                    </button>
+
                 </div>
                 <div class="field is-grouped is-grouped-right">
                     <button class="button circle-add-button is-primary is-large has-text-white" routerLink='./new-task'>
                         <h1>+</h1>
                     </button>
                 </div>
+
             </div>
+
+            <div class="task-list-container has-background-light" *ngIf=(!taskView)>
+                <h1 class="empty-state-text">
+                    Select a list to see tasks
+                </h1>
+            </div>
+
+
         </div>
-
-        <div class="task-list-container has-background-light" *ngIf=(!taskView)>
-            <h1 class="empty-state-text">
-                Select a list to see tasks
-            </h1>
-        </div>
-
-
     </div>
-</div>

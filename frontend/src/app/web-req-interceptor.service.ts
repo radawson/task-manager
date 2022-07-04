@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, empty, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, empty, Observable, Subject, switchMap, tap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class WebReqInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) { }
 
   refreshingAccessToken = false;
+  accessTokenRefreshed: Subject<any> = new Subject();
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     // add access token
@@ -41,13 +42,24 @@ export class WebReqInterceptor implements HttpInterceptor {
   }
 
   refreshAccessToken() {
-    this.refreshingAccessToken = true;
-    return this.authService.getNewAccessToken().pipe(
-      tap(() => {
-        this.refreshingAccessToken = false;
-        console.log("access token refreshed");
+    if (this.refreshingAccessToken) {
+      return new Observable(observer => {
+        this.accessTokenRefreshed.subscribe(() => {
+          observer.next();
+          observer.complete();
+        })
       })
-    )
+
+    } else {
+      this.refreshingAccessToken = true;
+      return this.authService.getNewAccessToken().pipe(
+        tap(() => {
+          console.log("access token refreshed");
+          this.refreshingAccessToken = false;
+          this.accessTokenRefreshed.next(null);
+        })
+      )
+    }
   }
 
   addAuthHeader(request: HttpRequest<any>) {

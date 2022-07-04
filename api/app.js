@@ -139,17 +139,28 @@ app.get('/lists', authenticate, (req, res) => {
     })
 })
 
+/** 
+ * GET /lists/:listId
+ * Purpose: return one list
+ */
+app.get('/lists/:listId', authenticate, (req, res) => {
+    // Return an array of all lists in db
+    List.findOne({ _id: req.params.listId }).then((list) => {
+        res.send(list);
+    })
+})
+
 /**
  * PATCH lists/:listId
  * Purpose: update the specified list
  */
-app.patch('/lists/:listId', (req, res) => {
+app.patch('/lists/:listId', authenticate, (req, res) => {
     // update list based on list id
     // new values based on JSON body
     List.findOneAndUpdate({ _id: req.params.listId }, {
         $set: req.body
     }).then(() => {
-        res.sendStatus(200);
+        res.send({ 'message': 'complete' });
     });
 
 })
@@ -268,7 +279,7 @@ app.patch('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
 })
 
 /**
- * DELETE /lists/:id/tasks/:taskId
+ * DELETE /lists/:listId/tasks/:taskId
  * Purpose: Deletes the specified task
  */
 app.delete('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
