@@ -11,10 +11,10 @@ import { List } from 'src/app/models/list.model';
 })
 export class HomeComponent implements OnInit {
 
-  lists!: List[];
+  list!: List;
   tasks!: Task[];
   taskView: boolean = false;
-  day: String = "Sunday";
+  day!: String;
 
   constructor(private taskService: TaskService, private route: ActivatedRoute) { }
 
@@ -23,16 +23,16 @@ export class HomeComponent implements OnInit {
     const d = new Date();
     this.day = weekday[d.getDay()];
 
-    this.route.params.subscribe(
-      (params: Params) => {
-        console.log(params);
-        if (params['listId']) {
-          this.taskService.getTasks(params['listId']).subscribe((tasks: any) => {
-            this.tasks = tasks;
-            this.taskView = true;
-          })
-        }
+    this.taskService.getListByName(this.day).subscribe((lists: any) => {
+      this.list = lists;
+    })
+    if (this.list) {
+      this.taskService.getTasks(this.list._id).subscribe((tasks: any) => {
+        this.tasks = tasks;
+        this.taskView = true;
+        console.log(this.list.title);
       })
+    }
   }
 
   onTaskClick(task: Task) {

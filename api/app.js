@@ -144,8 +144,19 @@ app.get('/lists', authenticate, (req, res) => {
  * Purpose: return one list
  */
 app.get('/lists/:listId', authenticate, (req, res) => {
-    // Return an array of all lists in db
+    // Return one list by list _id
     List.findOne({ _id: req.params.listId }).then((list) => {
+        res.send(list);
+    })
+})
+
+/** 
+ * GET /list/:listName
+ * Purpose: return one list by name
+ */
+app.get('/list/:listName', authenticate, (req, res) => {
+    // Return an list by name
+    List.findOne({ title: req.params.listName }).then((list) => {
         res.send(list);
     })
 })
