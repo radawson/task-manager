@@ -16,18 +16,35 @@
             </p>
         </div>
 
-        <div class="field is-grouped is-grouped-right">
-            <p class="control">
-                <a class="button is-primary is-medium has-text-white"
-                    (click)="updateList(listTitleInput.value, listDescriptionInput.value)">
-                    Submit
-                </a>
-            </p>
-            <p class="control">
-                <a class="button is-light is-medium" (click)="cancelBack()">
-                    Cancel
-                </a>
-            </p>
+        <div class="bottom-bar">
+            <div class="checks is-grouped is-grouped-left">
+                <div class="field is-grouped">
+                    <label class="checkbox">
+                        <input #listIsPublic type="checkbox" class="bigbox">
+                        List is Publically Viewable
+                    </label>
+                </div>
+                <div class="field is-grouped">
+                    <label class="checkbox">
+                        <input #listIsPublicEditable type="checkbox" class="bigbox">
+                        List is Publically Editable
+                    </label>
+                </div>
+            </div>
+
+            <div class="field is-grouped is-grouped-right">
+                <p class="control">
+                    <a class="button is-primary is-medium has-text-white"
+                        (click)="updateList(listTitleInput.value, listDescriptionInput.value)">
+                        Submit
+                    </a>
+                </p>
+                <p class="control">
+                    <a class="button is-light is-medium" (click)="cancelBack()">
+                        Cancel
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 </div>

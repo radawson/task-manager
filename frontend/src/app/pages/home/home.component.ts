@@ -25,14 +25,12 @@ export class HomeComponent implements OnInit {
 
     this.taskService.getListByName(this.day).subscribe((lists: any) => {
       this.list = lists;
-    })
-    if (this.list) {
       this.taskService.getTasks(this.list._id).subscribe((tasks: any) => {
         this.tasks = tasks;
         this.taskView = true;
-        console.log(this.list.title);
       })
-    }
+    })
+
   }
 
   onTaskClick(task: Task) {

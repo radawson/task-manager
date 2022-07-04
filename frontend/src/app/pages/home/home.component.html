@@ -1,22 +1,12 @@
-<div class="reminders is-centered">
+<div class="is-centered">
     <h1 class="centered-content title">
         {{ day }} Tasks
     </h1>
-    <div class="task-list-container">
-        <div *ngIf="taskView">
-            <!-- Task Elements -->
-            <div class="task" *ngFor="let task of tasks" (click)="onTaskClick(task)"
-                [ngClass]="{'completed': task.completed}">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    <p>{{ task.title }}</p>
-                </label>
-            </div>
-            <div class="field is-grouped is-grouped-right">
-                <button class="button circle-add-button is-primary is-large has-text-white" routerLink='./new-task'>
-                    <h1>+</h1>
-                </button>
-            </div>
+    <div class="task-list-container has-background-light" *ngIf="tasks">
+        <div class="task-row" *ngFor="let task of tasks" [ngClass]="{'completed': task.completed}"
+            (click)="onTaskClick(task)">
+            <div class="task-text">{{ task.title }}</div>
+            <div class="task-description">{{task.description}}</div>
         </div>
     </div>
 </div>

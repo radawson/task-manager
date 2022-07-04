@@ -1,0 +1,27 @@
+.checks {
+    display: flex;
+    flex-direction: column;
+
+
+    .field {
+        margin: 1em;
+    }
+
+
+    .bigbox {
+        height: 2em;
+        width: 2em;
+        margin: auto;
+    }
+}
+
+.bottom-bar {
+    display: flex;
+
+    .field {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        margin-top: auto;
+    }
+}
